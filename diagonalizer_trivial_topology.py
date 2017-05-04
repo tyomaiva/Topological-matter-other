@@ -39,12 +39,17 @@ class SimpleNamespace(object):
 def onsite( site,p ):
     x,=site.pos
     pyLong = p.py + float(x-p.x_shift)*float(p.lBinv2)
-    return cos(p.pz) * sigma0 + sin(pyLong) * sigma1 + p.Gap * sigma2
+    Onsite = sin(pyLong) * sigma1 + p.Gap * sigma2 # + cos(p.pz) * sigma0 
+    if (x == 0):
+        if hasattr(p, 'Rescale_onsite_0'):
+            Onsite = Onsite * p.Rescale_onsite_0
+    return Onsite
     
     
     
 def hop( s1,s2,p ):
-    return 0.5j * sigma3
+    Hop = 0.5j * sigma3
+    return Hop
 
 
 
@@ -118,3 +123,24 @@ def spectrum_plot( EigenValues, pMin, pMax, pCount, ShowPlot = True ):
         plt.show()    
     else:
         return plt
+    
+    
+
+def density_plot( FinalizedSystem, Parameters, EigenVectors ):
+    position_1D = realspace_position(FinalizedSystem)
+    SitesCount_X = len(FinalizedSystem.sites)    
+    
+    density = [[np.vdot(EigenVectors[i][position_1D[j]],EigenVectors[i][position_1D[j]]) for j in range(SitesCount_X)] \
+               for i in range(Parameters.EigenvectorsCount)]
+    density = np.real(density)
+
+    plt.pcolor( np.linspace(0,SitesCount_X,SitesCount_X), np.linspace(0,1,Parameters.EigenvectorsCount), density, \
+               vmin = 0, vmax= 3./SitesCount_X)
+    plt.colorbar()
+    plt.show()
+    
+    
+    
+def realspace_position( FinalizedSystem ):
+    SitesCount_X = len(FinalizedSystem.sites)
+    return [[j for j in range(SitesCount_X) if FinalizedSystem.sites[j].pos[0] == i][0] for i in range(SitesCount_X)]    
