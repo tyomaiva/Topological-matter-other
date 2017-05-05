@@ -59,6 +59,8 @@ def onsite( site,p ):
     pyLong = p.py + float(x-p.x_shift)*float(p.lBinv2)
     Onsite = (p.M0 - 2.*p.B1*(1-cos(p.pz)) - 2.*p.B2*(1-cos(pyLong)+1)) * s0s3 + p.A1*sin(p.pz) * s3s1 \
         + p.A2*sin(pyLong)* s2s1 + (p.C + 2.*p.D1*(1-cos(p.pz)) + 2.*p.D2*(1-cos(pyLong)+1)) * s0s0
+    if hasattr(p, 'b0'):
+        Onsite = Onsite + p.b0/2.*s2s3
     return Onsite
     
     
