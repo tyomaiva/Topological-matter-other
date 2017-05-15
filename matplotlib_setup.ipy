@@ -1,0 +1,16 @@
+%matplotlib inline
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+
+## make large plots and labels
+mpl.rc('figure', figsize=(8, 6))
+mpl.rc('axes', labelsize=15, titlesize=20)
+mpl.rc('xtick', labelsize=15)
+mpl.rc('ytick', labelsize=15)
+## no rainbows in bandstructure plots ;)
+mpl.rc('axes', prop_cycle=mpl.cycler('color', ['black']))
+## sane colormap
+mpl.rc('image', cmap='inferno')
+
+## utility function
+render_math = r'$\mathsf{{{}}}$'.format
